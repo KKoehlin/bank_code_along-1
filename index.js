@@ -30,15 +30,18 @@ form.onsubmit = (e) => {
 }
 
 function handleTransaction(transaction){
-    let currentTransaction = {}
+    console.log(transaction) 
 
     transactionNumber += 1
-    currentTransaction.tID = transactionNumber
-    currentTransaction.amount = transaction.amount
-    currentTransaction.type = transaction.type
-    currentTransaction.preBalance = balance
 
-    console.log(transaction) 
+    // Starts building the Transaction log entry, has to wait for last value
+    let currentTransaction = {
+        tID: transactionNumber,
+        amount: transaction.amount,
+        type: transaction.type,
+        preBalance: balance
+    }
+
     // Add or subtract from balance based on t.type
     if (transaction.type === "Deposit"){
         balance += transaction.amount
@@ -46,9 +49,11 @@ function handleTransaction(transaction){
         balance -= transaction.amount
     }
 
+    // Adds final k:v to the object
     currentTransaction.postBalance = balance
+    transactionArr.push(currentTransaction)
     console.log(currentTransaction)
-    console.log(balance) 
+    console.log(transactionArr)
 }
 
 function renderBalance(){
@@ -58,28 +63,33 @@ function renderBalance(){
 }
 
 function renderTransactionTable(){
-    let demoObj = {
-        id: 0,
-        amount: 500,
-        preBalance: 0,
-        postBalance: 500
+    transactionLog.innerHTML = ""
+
+    for (let i = transactionArr.length - 1; i >= 0; i--){
+        let row = createTableRow(transactionArr[i])
+        transactionLog.appendChild(row)
     }
+}
 
-    let tableRow = document.createElement('tr')
-    let tID = document.createElement('th')
-    let tAmount = document.createElement('td')
-    let preBalance = document.createElement('td')
-    let postBalance = document.createElement('td')
+function createTableRow(entry){
+        let tableRow = document.createElement('tr')
+        let tID = document.createElement('th')
+        let tType = document.createElement('td')
+        let tAmount = document.createElement('td')
+        let preBalance = document.createElement('td')
+        let postBalance = document.createElement('td')
 
-    tID.innerText = demoObj.id
-    tAmount.innerText = demoObj.amount
-    preBalance.innerText = demoObj.preBalance
-    postBalance.innerText = demoObj.postBalance
+        tID.innerText = entry.tID
+        tType.innerText = entry.type
+        tAmount.innerText = entry.amount
+        preBalance.innerText = entry.preBalance
+        postBalance.innerText = entry.postBalance
 
-    tableRow.appendChild(tID)
-    tableRow.appendChild(tAmount)
-    tableRow.appendChild(preBalance)
-    tableRow.appendChild(postBalance)
+        tableRow.appendChild(tID)
+        tableRow.appendChild(tType)
+        tableRow.appendChild(tAmount)
+        tableRow.appendChild(preBalance)
+        tableRow.appendChild(postBalance)
 
-    transactionLog.appendChild(tableRow)
+        return tableRow
 }
