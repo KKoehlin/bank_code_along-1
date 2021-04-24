@@ -17,10 +17,12 @@
 .form-container {
     padding: 15px;
 }
+
 .transaction-card {
     margin-right: 20px;
 }
-.transaction-button {
+
+#transaction-button {
     float:right;
     max-width: 180px;
     min-width: 120px;
